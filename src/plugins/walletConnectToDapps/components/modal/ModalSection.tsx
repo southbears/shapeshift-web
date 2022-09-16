@@ -1,8 +1,8 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 import { Box, Button, Collapse } from '@chakra-ui/react'
+import { RawText } from 'components/Text'
 import type { FC, ReactElement, ReactNode } from 'react'
 import { useCallback, useState } from 'react'
-import { RawText } from 'components/Text'
 
 type Props = {
   title: string
@@ -21,7 +21,7 @@ export const ModalSection: FC<Props> = ({ title, icon, children, defaultOpen = t
         variant='link'
         textAlign='left'
         justifyContent='flex-start'
-        leftIcon={<Box color='gray.500'>{icon}</Box>}
+        leftIcon={!!icon ? <Box color='gray.500'>{icon}</Box> : undefined}
         rightIcon={
           isOpen ? <ChevronDownIcon color='gray.500' /> : <ChevronUpIcon color='gray.500' />
         }
