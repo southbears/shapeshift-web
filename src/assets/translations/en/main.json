@@ -1377,7 +1377,8 @@
         },
         "signTransaction": {
           "advancedParameters": {
-            "title": "Advanced Parameters"
+            "title": "Advanced Parameters",
+            "alert": "For advanced use only. Modifying these settings could result in stuck transactions."
           }
         }
       }
