@@ -25,19 +25,27 @@ type Props = {
   onClose(): void
 }
 
+type FormValues = {
+  uri: string
+}
+
 export const ConnectModal: FC<Props> = ({ isOpen, onClose }) => {
   const translate = useTranslate()
 
-  const { register, handleSubmit, control, formState } = useForm<{ uri: string }>({
+  const { register, handleSubmit, control, formState } = useForm<FormValues>({
     mode: 'onChange',
     defaultValues: { uri: '' },
   })
   const canConnect = !!useWatch({ control, name: 'uri' })
 
-  const walletConnect = useWalletConnect()
-  const handleConnect = useCallback(async () => {
-    await new Promise(r => setTimeout(r, 3000))
-  }, [])
+  const { connect } = useWalletConnect()
+  const handleConnect = useCallback(
+    async (values: FormValues) => {
+      await connect(values.uri)
+      onClose()
+    },
+    [connect, onClose],
+  )
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} variant='header-nav'>

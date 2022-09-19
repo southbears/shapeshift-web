@@ -3876,7 +3876,7 @@
     web-encoding "^1.1.0"
     wif "^2.0.6"
 
-"@shapeshiftoss/hdwallet-core@../hdwallet/packages/hdwallet-core":
+"@shapeshiftoss/hdwallet-core@../hdwallet/packages/hdwallet-core", "@shapeshiftoss/hdwallet-core@1.29.0":
   version "1.29.0"
   dependencies:
     eventemitter2 "^5.0.1"
@@ -3884,17 +3884,7 @@
     rxjs "^6.4.0"
     type-assertions "^1.1.0"
 
-"@shapeshiftoss/hdwallet-core@1.29.0":
-  version "1.29.0"
-  resolved "https://registry.yarnpkg.com/@shapeshiftoss/hdwallet-core/-/hdwallet-core-1.29.0.tgz#d64cf7e9f5bea6af53038d5af4969cf6979ba95f"
-  integrity sha512-de0rN3+4jvt+ZNvtF4AOWGYfZ3suyWdjLPPnYnxxy/pKittRDjtzjAuJYDaXVQR/vYlroiTeoEWFbEkb5/silA==
-  dependencies:
-    eventemitter2 "^5.0.1"
-    lodash "^4.17.21"
-    rxjs "^6.4.0"
-    type-assertions "^1.1.0"
-
-"@shapeshiftoss/hdwallet-core@1.31.0", "@shapeshiftoss/hdwallet-core@^1.31.0":
+"@shapeshiftoss/hdwallet-core@1.31.0":
   version "1.31.0"
   resolved "https://registry.yarnpkg.com/@shapeshiftoss/hdwallet-core/-/hdwallet-core-1.31.0.tgz#5d559da8eaea8ee96bfb06a643818a4459941ed3"
   integrity sha512-VZ1y4JfRcw1T+2wOgsFj1z+mE9+AE0vHTfJxuVAnptTI4TbtVlAExb4foJuQ+1OlUWQyjTabG+f3LAmtvdwFKg==

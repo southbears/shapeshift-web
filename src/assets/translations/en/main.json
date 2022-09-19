@@ -1371,7 +1371,8 @@
           "disconnect": "Disconnect",
           "address": "Address",
           "connected": "Connected",
-          "network": "Network"
+          "network": "Network",
+          "unsupportedNetwork": "Unsupported Network"
         }
       },
       "modal": {
