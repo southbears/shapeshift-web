@@ -1,21 +1,20 @@
 import { CopyIcon, ExternalLinkIcon } from '@chakra-ui/icons'
 import { Box, HStack, IconButton, Link, useColorModeValue } from '@chakra-ui/react'
-import type { FC } from 'react'
 import { Card } from 'components/Card/Card'
 import { FoxIcon } from 'components/Icons/FoxIcon'
 import { MiddleEllipsis } from 'components/MiddleEllipsis/MiddleEllipsis'
 import { RawText } from 'components/Text'
+import type { FC } from 'react'
 
 type Props = {
   address: string
   name: string
   url: string
-  balance: number
 }
 
-export const WalletSummaryCard: FC<Props> = ({ address, name, url, balance }) => (
+export const WalletSummaryCard: FC<Props> = ({ address, name, url }) => (
   <Card bg={useColorModeValue('white', 'gray.850')} pt={4} pb={2} pl={4} borderRadius='md'>
-    <HStack spacing={0} mb={4}>
+    <HStack spacing={0}>
       <FoxIcon color='gray.500' boxSize={6} />
       <Box flex={1} pl={4}>
         <MiddleEllipsis value={address} fontSize='lg' fontWeight='medium' mb={1} />
@@ -38,8 +37,8 @@ export const WalletSummaryCard: FC<Props> = ({ address, name, url, balance }) =>
         />
       </Link>
     </HStack>
-    <RawText color='gray.500' fontWeight='medium'>
+    {/* <RawText color='gray.500' fontWeight='medium' mt={4}>
       Balance: {balance} ETH
-    </RawText>
+    </RawText> */}
   </Card>
 )

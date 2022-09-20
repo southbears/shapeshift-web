@@ -1,15 +1,15 @@
 import { CloseIcon } from '@chakra-ui/icons'
 import { MenuGroup } from '@chakra-ui/menu'
 import { Box, HStack, MenuDivider, MenuItem, VStack } from '@chakra-ui/react'
+import { MiddleEllipsis } from 'components/MiddleEllipsis/MiddleEllipsis'
+import { RawText, Text } from 'components/Text'
+import { getChainAdapterManager } from 'context/PluginProvider/chainAdapterSingleton'
 import dayjs from 'dayjs'
+import { useEvm } from 'hooks/useEvm/useEvm'
 import { useWalletConnect } from 'plugins/walletConnectToDapps/WalletConnectBridgeContext'
 import type { FC } from 'react'
 import { useMemo } from 'react'
 import { useTranslate } from 'react-polyglot'
-import { MiddleEllipsis } from 'components/MiddleEllipsis/MiddleEllipsis'
-import { RawText, Text } from 'components/Text'
-import { getChainAdapterManager } from 'context/PluginProvider/chainAdapterSingleton'
-import { useEvm } from 'hooks/useEvm/useEvm'
 
 import { DappAvatar } from './DappAvatar'
 
@@ -23,15 +23,14 @@ export const DappHeaderMenuSummary: FC = () => {
   const connectedChainId = walletConnect.bridge?.connector.chainId
   const chainName = useMemo(() => {
     const name = chainAdapterManager
-      .get(supportedEvmChainIds.find(chainId => chainId === connectedChainId) ?? '')
+      .get(supportedEvmChainIds.find(chainId => chainId === String(connectedChainId)) ?? '')
       ?.getDisplayName()
 
     return name ?? translate('plugins.walletConnectToDapps.header.menu.unsupportedNetwork')
   }, [chainAdapterManager, connectedChainId, supportedEvmChainIds, translate])
   const handleDisconnect = walletConnect.disconnect
 
-  if (!walletConnect.bridge) return null
-  const dapp = walletConnect.bridge.connector.peerMeta
+  if (!walletConnect.bridge || !walletConnect.dapp) return null
 
   return (
     <>
@@ -42,14 +41,14 @@ export const DappHeaderMenuSummary: FC = () => {
       >
         <HStack spacing={4} px={3} py={1}>
           <DappAvatar
-            name={dapp.name}
-            image={dapp.icons[0]}
+            name={walletConnect.dapp.name}
+            image={walletConnect.dapp.icons[0]}
             connected={walletConnect.bridge.connector.connected}
           />
           <Box fontWeight='medium'>
-            <RawText>{dapp.name}</RawText>
+            <RawText>{walletConnect.dapp.name}</RawText>
             <RawText fontSize='sm' color='gray.500'>
-              {dapp.url.replace(/^https?:\/\//, '')}
+              {walletConnect.dapp.url.replace(/^https?:\/\//, '')}
             </RawText>
           </Box>
         </HStack>
