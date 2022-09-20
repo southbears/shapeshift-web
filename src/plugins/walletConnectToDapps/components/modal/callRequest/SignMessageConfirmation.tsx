@@ -8,26 +8,29 @@ import {
   Image,
   Link,
   useColorModeValue,
-  VStack
+  VStack,
 } from '@chakra-ui/react'
-import { Card } from 'components/Card/Card'
-import { RawText, Text } from 'components/Text'
 import { useWalletConnect } from 'plugins/walletConnectToDapps/WalletConnectBridgeContext'
 import type { FC } from 'react'
 import { useTranslate } from 'react-polyglot'
+import { Card } from 'components/Card/Card'
+import { RawText, Text } from 'components/Text'
 
 import { WalletSummaryCard } from './WalletSummaryCard'
 
 type Props = {
   message: string
   isLoading: boolean
+  onConfirm(): void
+  onReject(): void
 }
 
-export const SignMessageConfirmation: FC<Props> = ({ message, isLoading }) => {
+export const SignMessageConfirmation: FC<Props> = ({ message, isLoading, onConfirm, onReject }) => {
   const translate = useTranslate()
+  const cardBg = useColorModeValue('white', 'gray.850')
 
-  const walletConnect = useWalletConnect();
-  if (!walletConnect.bridge || !walletConnect.dapp) return null;
+  const walletConnect = useWalletConnect()
+  if (!walletConnect.bridge || !walletConnect.dapp) return null
   const address = walletConnect.bridge?.connector.accounts[0]
 
   // const [gasInputValue, setGasInputValue] = useState<FeeDataKey>()
@@ -62,7 +65,7 @@ export const SignMessageConfirmation: FC<Props> = ({ message, isLoading }) => {
           translation='plugins.walletConnectToDapps.modal.signMessage.requestFrom'
           mb={4}
         />
-        <Card bg={useColorModeValue('white', 'gray.850')} borderRadius='md'>
+        <Card bg={cardBg} borderRadius='md'>
           <HStack align='center' pl={4}>
             <Image borderRadius='full' boxSize='24px' src={walletConnect.dapp.icons[0]} />
             <RawText fontWeight='semibold' flex={1}>
@@ -105,10 +108,17 @@ export const SignMessageConfirmation: FC<Props> = ({ message, isLoading }) => {
           isLoading={isLoading}
           disabled={isLoading}
           type='submit'
+          onClick={onConfirm}
         >
           {translate('plugins.walletConnectToDapps.modal.signMessage.confirm')}
         </Button>
-        <Button size='lg' width='full' isLoading={isLoading} disabled={isLoading}>
+        <Button
+          size='lg'
+          width='full'
+          isLoading={isLoading}
+          disabled={isLoading}
+          onClick={onReject}
+        >
           {translate('plugins.walletConnectToDapps.modal.signMessage.reject')}
         </Button>
       </VStack>

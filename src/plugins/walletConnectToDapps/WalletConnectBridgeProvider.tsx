@@ -1,16 +1,35 @@
 import { HDWalletWCBridge } from '@shapeshiftoss/hdwallet-walletconnect-bridge'
-import { WalletConnectCallRequest } from '@shapeshiftoss/hdwallet-walletconnect-bridge/dist/types'
-import { useWallet } from 'hooks/useWallet/useWallet'
+import type { WalletConnectCallRequest } from '@shapeshiftoss/hdwallet-walletconnect-bridge/dist/types'
 import type { FC, PropsWithChildren } from 'react'
 import { useCallback, useEffect, useState } from 'react'
+import { useWallet } from 'hooks/useWallet/useWallet'
+
 import { CallRequestModal } from './components/modal/callRequest/CallRequestModal'
 import { WalletConnectBridgeContext } from './WalletConnectBridgeContext'
 
 export const WalletConnectBridgeProvider: FC<PropsWithChildren> = ({ children }) => {
   const wallet = useWallet().state.wallet
   const [bridge, setBridge] = useState<HDWalletWCBridge>()
+
   const [callRequests, setCallRequests] = useState<WalletConnectCallRequest[]>([])
-  const onCallRequest = useCallback((request: WalletConnectCallRequest) => setCallRequests((prev) => [...prev, request]), []);
+  const onCallRequest = useCallback(
+    (request: WalletConnectCallRequest) => setCallRequests(prev => [...prev, request]),
+    [],
+  )
+  const approveRequest = useCallback(
+    async (request: WalletConnectCallRequest) => {
+      await bridge?.approveRequest(request)
+      setCallRequests(prev => prev.filter(req => req.id !== request.id))
+    },
+    [bridge],
+  )
+  const rejectRequest = useCallback(
+    async (request: WalletConnectCallRequest) => {
+      await bridge?.rejectRequest(request)
+      setCallRequests(prev => prev.filter(req => req.id !== request.id))
+    },
+    [bridge],
+  )
 
   const [, setTick] = useState(0)
   const rerender = useCallback(() => setTick(prev => prev + 1), [])
@@ -31,7 +50,7 @@ export const WalletConnectBridgeProvider: FC<PropsWithChildren> = ({ children })
         return
       }
 
-      const newBridge = HDWalletWCBridge.fromURI(uri, wallet, {onCallRequest})
+      const newBridge = HDWalletWCBridge.fromURI(uri, wallet, { onCallRequest })
       newBridge.connector.on('connect', rerender)
       newBridge.connector.on('disconnect', disconnect)
       await newBridge.connect()
@@ -41,7 +60,7 @@ export const WalletConnectBridgeProvider: FC<PropsWithChildren> = ({ children })
   )
 
   const tryConnectingToExistingSession = useCallback(async () => {
-    if (!!bridge) return;
+    if (!!bridge) return
     if (!wallet || !('_supportsETH' in wallet)) return
 
     const wcSessionJsonString = localStorage.getItem('walletconnect')
@@ -50,23 +69,25 @@ export const WalletConnectBridgeProvider: FC<PropsWithChildren> = ({ children })
     }
 
     const session = JSON.parse(wcSessionJsonString)
-    const existingBridge = HDWalletWCBridge.fromSession(session, wallet, {onCallRequest})
+    const existingBridge = HDWalletWCBridge.fromSession(session, wallet, { onCallRequest })
     existingBridge.connector.on('connect', rerender)
     existingBridge.connector.on('disconnect', disconnect)
     await existingBridge.connect()
     setBridge(existingBridge)
-  }, [!!bridge, wallet, disconnect, rerender, onCallRequest])
+  }, [bridge, wallet, disconnect, rerender, onCallRequest])
 
   useEffect(() => {
     tryConnectingToExistingSession()
   }, [tryConnectingToExistingSession])
 
-  console.log('call reqs...', callRequests);
+  console.log('call reqs...', callRequests)
 
-  const dapp = bridge?.connector.peerMeta ?? undefined;
+  const dapp = bridge?.connector.peerMeta ?? undefined
 
   return (
-    <WalletConnectBridgeContext.Provider value={{ bridge, dapp, callRequests, connect, disconnect }}>
+    <WalletConnectBridgeContext.Provider
+      value={{ bridge, dapp, callRequests, connect, disconnect, approveRequest, rejectRequest }}
+    >
       {children}
       <CallRequestModal callRequest={callRequests[0]} />
     </WalletConnectBridgeContext.Provider>

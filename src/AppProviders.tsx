@@ -2,8 +2,15 @@ import {
   ChakraProvider,
   ColorModeScript,
   createLocalStorageManager,
-  createStandaloneToast
+  createStandaloneToast,
 } from '@chakra-ui/react'
+import { DefiManagerProvider } from 'features/defi/contexts/DefiManagerProvider/DefiManagerProvider'
+import { WalletConnectBridgeProvider } from 'plugins/walletConnectToDapps/WalletConnectBridgeProvider'
+import React from 'react'
+import { Provider as ReduxProvider } from 'react-redux'
+import { HashRouter } from 'react-router-dom'
+import { PersistGate } from 'redux-persist/integration/react'
+import { ScrollToTop } from 'Routes/ScrollToTop'
 import { Zendesk } from 'components/Zendesk/Zendesk'
 import { AppProvider } from 'context/AppProvider/AppContext'
 import { BrowserRouterProvider } from 'context/BrowserRouterProvider/BrowserRouterProvider'
@@ -14,14 +21,7 @@ import { PluginProvider } from 'context/PluginProvider/PluginProvider'
 import { TransactionsProvider } from 'context/TransactionsProvider/TransactionsProvider'
 import { KeepKeyProvider } from 'context/WalletProvider/KeepKeyProvider'
 import { WalletProvider } from 'context/WalletProvider/WalletProvider'
-import { DefiManagerProvider } from 'features/defi/contexts/DefiManagerProvider/DefiManagerProvider'
 import { SplashScreen } from 'pages/SplashScreen/SplashScreen'
-import { WalletConnectBridgeProvider } from 'plugins/walletConnectToDapps/WalletConnectBridgeProvider'
-import React from 'react'
-import { Provider as ReduxProvider } from 'react-redux'
-import { HashRouter } from 'react-router-dom'
-import { PersistGate } from 'redux-persist/integration/react'
-import { ScrollToTop } from 'Routes/ScrollToTop'
 import { persistor, store } from 'state/store'
 import { theme } from 'theme/theme'
 
