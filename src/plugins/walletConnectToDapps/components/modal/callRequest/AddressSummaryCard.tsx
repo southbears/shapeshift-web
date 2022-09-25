@@ -1,14 +1,14 @@
 import { CopyIcon, ExternalLinkIcon } from '@chakra-ui/icons'
 import { Box, HStack, IconButton, Link, useColorModeValue } from '@chakra-ui/react'
+import type { FC, ReactNode } from 'react'
 import { Card } from 'components/Card/Card'
 import { MiddleEllipsis } from 'components/MiddleEllipsis/MiddleEllipsis'
 import { RawText } from 'components/Text'
-import type { FC, ReactNode } from 'react'
 
 type Props = {
   address: string
   name?: string
-  icon?: ReactNode;
+  icon?: ReactNode
 }
 
 export const AddressSummaryCard: FC<Props> = ({ address, name, icon }) => (
@@ -21,13 +21,15 @@ export const AddressSummaryCard: FC<Props> = ({ address, name, icon }) => (
       )}
       <Box flex={1}>
         <MiddleEllipsis value={address} fontSize='lg' fontWeight='medium' />
-        {!!name && <RawText color='gray.500' fontWeight='medium' mt={1}>
-          {name}
-        </RawText>}
+        {!!name && (
+          <RawText color='gray.500' fontWeight='medium' mt={1}>
+            {name}
+          </RawText>
+        )}
       </Box>
       <IconButton
         variant='ghost'
-        size="small"
+        size='small'
         aria-label='Copy'
         icon={<CopyIcon />}
         p={2}
@@ -37,7 +39,7 @@ export const AddressSummaryCard: FC<Props> = ({ address, name, icon }) => (
         <IconButton
           icon={<ExternalLinkIcon />}
           variant='ghost'
-          size="small"
+          size='small'
           aria-label={address}
           p={2}
           colorScheme='gray'

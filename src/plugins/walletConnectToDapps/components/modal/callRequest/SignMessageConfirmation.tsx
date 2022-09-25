@@ -8,15 +8,15 @@ import {
   Image,
   Link,
   useColorModeValue,
-  VStack
+  VStack,
 } from '@chakra-ui/react'
-import { Card } from 'components/Card/Card'
-import { RawText, Text } from 'components/Text'
 import { useWalletConnect } from 'plugins/walletConnectToDapps/WalletConnectBridgeContext'
 import type { FC } from 'react'
 import { useTranslate } from 'react-polyglot'
-
+import { Card } from 'components/Card/Card'
 import { FoxIcon } from 'components/Icons/FoxIcon'
+import { RawText, Text } from 'components/Text'
+
 import { AddressSummaryCard } from './AddressSummaryCard'
 
 type Props = {
@@ -101,20 +101,10 @@ export const SignMessageConfirmation: FC<Props> = ({ message, onConfirm, onRejec
       />
 
       <VStack spacing={4}>
-        <Button
-          size='lg'
-          width='full'
-          colorScheme='blue'
-          type='submit'
-          onClick={onConfirm}
-        >
+        <Button size='lg' width='full' colorScheme='blue' type='submit' onClick={onConfirm}>
           {translate('plugins.walletConnectToDapps.modal.signMessage.confirm')}
         </Button>
-        <Button
-          size='lg'
-          width='full'
-          onClick={onReject}
-        >
+        <Button size='lg' width='full' onClick={onReject}>
           {translate('plugins.walletConnectToDapps.modal.signMessage.reject')}
         </Button>
       </VStack>

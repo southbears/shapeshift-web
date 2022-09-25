@@ -5,7 +5,8 @@ import { convertHexToUtf8 } from '@walletconnect/utils'
 import { WalletConnectIcon } from 'components/Icons/WalletConnectIcon'
 import { Text } from 'components/Text'
 import { useWalletConnect } from 'plugins/walletConnectToDapps/WalletConnectBridgeContext'
-import { FC, useCallback, useEffect, useMemo } from 'react'
+import type { FC } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 
 import { SendTransactionConfirmation } from './SendTransactionConfirmation'
 import { SignMessageConfirmation } from './SignMessageConfirmation'
@@ -30,20 +31,24 @@ export const CallRequestModal: FC<WalletConnectModalProps> = ({ callRequest }) =
         )
       case 'eth_sendTransaction':
         return (
-          <SendTransactionConfirmation request={callRequest.params[0]} onConfirm={() => approveRequest(callRequest)}
-          onReject={() => rejectRequest(callRequest)} />
-        );
+          <SendTransactionConfirmation
+            request={callRequest.params[0]}
+            onConfirm={() => approveRequest(callRequest)}
+            onReject={() => rejectRequest(callRequest)}
+          />
+        )
       default:
         return null
     }
   }, [callRequest, approveRequest, rejectRequest])
 
+  const canRenderCallRequest = !!content;
   const rejectRequestIfCannotRender = useCallback(() => {
-    if (!!callRequest && !content) {
-      rejectRequest(callRequest);
+    if (!!callRequest && !canRenderCallRequest) {
+      rejectRequest(callRequest)
     }
-  }, [callRequest, rejectRequest, !!content]);
-  useEffect(rejectRequestIfCannotRender, [rejectRequestIfCannotRender]);
+  }, [callRequest, rejectRequest, canRenderCallRequest])
+  useEffect(rejectRequestIfCannotRender, [rejectRequestIfCannotRender])
 
   return (
     <Modal isOpen={!!callRequest} onClose={() => alert('allow close?')} variant='header-nav'>

@@ -6,13 +6,13 @@ import {
   NumberInput,
   NumberInputField,
   useColorModeValue,
-  VStack
+  VStack,
 } from '@chakra-ui/react'
+import type { FC } from 'react'
+import { useTranslate } from 'react-polyglot'
 import { Card } from 'components/Card/Card'
 import { HelperTooltip } from 'components/HelperTooltip/HelperTooltip'
 import { Text } from 'components/Text'
-import type { FC } from 'react'
-import { useTranslate } from 'react-polyglot'
 
 type Props = {}
 
