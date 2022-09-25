@@ -7,6 +7,7 @@ import { Text } from 'components/Text'
 import { useWalletConnect } from 'plugins/walletConnectToDapps/WalletConnectBridgeContext'
 import { FC, useCallback, useEffect, useMemo } from 'react'
 
+import { SendTransactionConfirmation } from './SendTransactionConfirmation'
 import { SignMessageConfirmation } from './SignMessageConfirmation'
 
 type WalletConnectModalProps = {
@@ -23,11 +24,15 @@ export const CallRequestModal: FC<WalletConnectModalProps> = ({ callRequest }) =
         return (
           <SignMessageConfirmation
             message={convertHexToUtf8(callRequest.params[0])}
-            isLoading={false}
             onConfirm={() => approveRequest(callRequest)}
             onReject={() => rejectRequest(callRequest)}
           />
         )
+      case 'eth_sendTransaction':
+        return (
+          <SendTransactionConfirmation request={callRequest.params[0]} onConfirm={() => approveRequest(callRequest)}
+          onReject={() => rejectRequest(callRequest)} />
+        );
       default:
         return null
     }

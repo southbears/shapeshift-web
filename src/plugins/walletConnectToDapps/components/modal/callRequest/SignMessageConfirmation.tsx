@@ -8,24 +8,24 @@ import {
   Image,
   Link,
   useColorModeValue,
-  VStack,
+  VStack
 } from '@chakra-ui/react'
+import { Card } from 'components/Card/Card'
+import { RawText, Text } from 'components/Text'
 import { useWalletConnect } from 'plugins/walletConnectToDapps/WalletConnectBridgeContext'
 import type { FC } from 'react'
 import { useTranslate } from 'react-polyglot'
-import { Card } from 'components/Card/Card'
-import { RawText, Text } from 'components/Text'
 
-import { WalletSummaryCard } from './WalletSummaryCard'
+import { FoxIcon } from 'components/Icons/FoxIcon'
+import { AddressSummaryCard } from './AddressSummaryCard'
 
 type Props = {
   message: string
-  isLoading: boolean
   onConfirm(): void
   onReject(): void
 }
 
-export const SignMessageConfirmation: FC<Props> = ({ message, isLoading, onConfirm, onReject }) => {
+export const SignMessageConfirmation: FC<Props> = ({ message, onConfirm, onReject }) => {
   const translate = useTranslate()
   const cardBg = useColorModeValue('white', 'gray.850')
 
@@ -39,7 +39,7 @@ export const SignMessageConfirmation: FC<Props> = ({ message, isLoading, onConfi
       {/* <GasInput value={gasInputValue} onChange={setGasInputValue} />
       <ModalSection
         title={translate(
-          'plugins.walletConnectToDapps.modal.signTransaction.advancedParameters.title',
+          'plugins.walletConnectToDapps.modal.sendTransaction.advancedParameters.title',
         )}
         icon={<FaWrench />}
       >
@@ -52,10 +52,10 @@ export const SignMessageConfirmation: FC<Props> = ({ message, isLoading, onConfi
           translation='plugins.walletConnectToDapps.modal.signMessage.signingFrom'
           mb={4}
         />
-        <WalletSummaryCard
+        <AddressSummaryCard
           address={address}
           name='My Wallet' // TODO: what string do we put here?
-          url={`https://etherscan.com/address/${address}`}
+          icon={<FoxIcon color='gray.500' w='full' h='full' />}
         />
       </Box>
 
@@ -105,8 +105,6 @@ export const SignMessageConfirmation: FC<Props> = ({ message, isLoading, onConfi
           size='lg'
           width='full'
           colorScheme='blue'
-          isLoading={isLoading}
-          disabled={isLoading}
           type='submit'
           onClick={onConfirm}
         >
@@ -115,8 +113,6 @@ export const SignMessageConfirmation: FC<Props> = ({ message, isLoading, onConfi
         <Button
           size='lg'
           width='full'
-          isLoading={isLoading}
-          disabled={isLoading}
           onClick={onReject}
         >
           {translate('plugins.walletConnectToDapps.modal.signMessage.reject')}

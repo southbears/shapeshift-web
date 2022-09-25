@@ -1,38 +1,45 @@
 import { CopyIcon, ExternalLinkIcon } from '@chakra-ui/icons'
 import { Box, HStack, IconButton, Link, useColorModeValue } from '@chakra-ui/react'
-import type { FC } from 'react'
 import { Card } from 'components/Card/Card'
-import { FoxIcon } from 'components/Icons/FoxIcon'
 import { MiddleEllipsis } from 'components/MiddleEllipsis/MiddleEllipsis'
 import { RawText } from 'components/Text'
+import type { FC, ReactNode } from 'react'
 
 type Props = {
   address: string
-  name: string
-  url: string
+  name?: string
+  icon?: ReactNode;
 }
 
-export const WalletSummaryCard: FC<Props> = ({ address, name, url }) => (
-  <Card bg={useColorModeValue('white', 'gray.850')} pt={4} pb={2} pl={4} borderRadius='md'>
+export const AddressSummaryCard: FC<Props> = ({ address, name, icon }) => (
+  <Card bg={useColorModeValue('white', 'gray.850')} py={4} pl={4} pr={2} borderRadius='md'>
     <HStack spacing={0}>
-      <FoxIcon color='gray.500' boxSize={6} />
-      <Box flex={1} pl={4}>
-        <MiddleEllipsis value={address} fontSize='lg' fontWeight='medium' mb={1} />
-        <RawText color='gray.500' fontWeight='medium'>
+      {!!icon && (
+        <Box w={10} h={6} pr={4}>
+          {icon}
+        </Box>
+      )}
+      <Box flex={1}>
+        <MiddleEllipsis value={address} fontSize='lg' fontWeight='medium' />
+        {!!name && <RawText color='gray.500' fontWeight='medium' mt={1}>
           {name}
-        </RawText>
+        </RawText>}
       </Box>
       <IconButton
         variant='ghost'
+        size="small"
         aria-label='Copy'
         icon={<CopyIcon />}
+        p={2}
         onClick={() => navigator.clipboard.writeText(address)}
       />
-      <Link href={url} isExternal>
+      <Link href={`https://etherscan.com/address/${address}`} isExternal>
         <IconButton
           icon={<ExternalLinkIcon />}
           variant='ghost'
+          size="small"
           aria-label={address}
+          p={2}
           colorScheme='gray'
         />
       </Link>
