@@ -2,11 +2,10 @@ import { Modal, ModalContent, ModalOverlay } from '@chakra-ui/modal'
 import { HStack, ModalCloseButton, ModalHeader } from '@chakra-ui/react'
 import type { WalletConnectCallRequest } from '@shapeshiftoss/hdwallet-walletconnect-bridge/dist/types'
 import { convertHexToUtf8 } from '@walletconnect/utils'
-import { useWalletConnect } from 'plugins/walletConnectToDapps/WalletConnectBridgeContext'
-import type { FC } from 'react'
-import { useMemo } from 'react'
 import { WalletConnectIcon } from 'components/Icons/WalletConnectIcon'
 import { Text } from 'components/Text'
+import { useWalletConnect } from 'plugins/walletConnectToDapps/WalletConnectBridgeContext'
+import { FC, useCallback, useEffect, useMemo } from 'react'
 
 import { SignMessageConfirmation } from './SignMessageConfirmation'
 
@@ -33,6 +32,13 @@ export const CallRequestModal: FC<WalletConnectModalProps> = ({ callRequest }) =
         return null
     }
   }, [callRequest, approveRequest, rejectRequest])
+
+  const rejectRequestIfCannotRender = useCallback(() => {
+    if (!!callRequest && !content) {
+      rejectRequest(callRequest);
+    }
+  }, [callRequest, rejectRequest, !!content]);
+  useEffect(rejectRequestIfCannotRender, [rejectRequestIfCannotRender]);
 
   return (
     <Modal isOpen={!!callRequest} onClose={() => alert('allow close?')} variant='header-nav'>
