@@ -10,7 +10,7 @@ import { bn, bnOrZero } from 'lib/bignumber/bignumber'
 export function useCallRequestFees(
   request: WalletConnectEthSendTransactionCallRequest['params'][number],
 ) {
-  const [fees, setFees] = useState<FeePrice>({
+  const [fees, setFees] = useState<FeePrice | undefined>({
     [FeeDataKey.Slow]: { txFee: '0.0001', fiatFee: '5.00' },
     [FeeDataKey.Average]: { txFee: '0.0001', fiatFee: '5.00' },
     [FeeDataKey.Fast]: { txFee: '0.0001', fiatFee: '5.00' },
@@ -24,17 +24,6 @@ export function useCallRequestFees(
 
     const chainId = `eip155:${request.chainId ?? connectedChainId}`
     const adapter = getChainAdapterManager().get(chainId)
-
-    // console.log('dang', {request, chainId, adapter, manager: getChainAdapterManager(), input: {
-    //   to: request.to,
-    //   value: bnOrZero(request.value).toFixed(0),
-    //   chainSpecific: {
-    //     from: address,
-    //     contractAddress: request.to,
-    //   },
-    // }})
-
-    // ETH
 
     const estimatedFees = await (adapter as unknown as EvmBaseAdapter<EvmChainId>).getFeeData({
       to: request.to,

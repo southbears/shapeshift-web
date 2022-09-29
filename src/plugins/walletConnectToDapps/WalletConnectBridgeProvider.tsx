@@ -1,8 +1,8 @@
 import { HDWalletWCBridge } from '@shapeshiftoss/hdwallet-walletconnect-bridge'
 import type { WalletConnectCallRequest } from '@shapeshiftoss/hdwallet-walletconnect-bridge/dist/types'
-import { useWallet } from 'hooks/useWallet/useWallet'
 import type { FC, PropsWithChildren } from 'react'
 import { useCallback, useEffect, useState } from 'react'
+import { useWallet } from 'hooks/useWallet/useWallet'
 
 import { CallRequestModal } from './components/modal/callRequest/CallRequestModal'
 import { WalletConnectBridgeContext } from './WalletConnectBridgeContext'
