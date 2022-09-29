@@ -54,7 +54,18 @@ export const ContractInteractionBreakdown: FC<Props> = ({ request }) => {
                 {_.startCase(input.name)} ({input.type})
               </RawText>
               {input.type === 'bytes[]' ? (
-                <MiddleEllipsis fontWeight='medium' value={transaction.args[index].toString()} />
+                <HStack>
+                  <MiddleEllipsis fontWeight='medium' value={transaction.args[index].toString()} />
+                  <IconButton
+                    size='small'
+                    variant='ghost'
+                    aria-label='Copy'
+                    icon={<CopyIcon />}
+                    onClick={() =>
+                      navigator.clipboard.writeText(transaction.args[index].toString())
+                    }
+                  />
+                </HStack>
               ) : (
                 <RawText fontWeight='normal'>{transaction.args[index].toString()}</RawText>
               )}
