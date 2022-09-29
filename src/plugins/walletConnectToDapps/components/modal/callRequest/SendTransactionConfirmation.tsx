@@ -1,4 +1,4 @@
-import { Box, Button, Image, useColorModeValue, VStack } from '@chakra-ui/react'
+import { Box, Button, HStack, Image, useColorModeValue, VStack } from '@chakra-ui/react'
 import type {
   WalletConnectCallRequestResponseMap,
   WalletConnectEthSendTransactionCallRequest,
@@ -14,6 +14,7 @@ import { Text } from 'components/Text'
 
 import { AddressSummaryCard } from './AddressSummaryCard'
 import { ContractInteractionBreakdown } from './ContractInteractionBreakdown'
+import { GasFeeEstimateLabel } from './GasFeeEstimateLabel'
 import { ModalSection } from './ModalSection'
 import { TransactionAdvancedParameters } from './TransactionAdvancedParameters'
 
@@ -91,7 +92,12 @@ export const SendTransactionConfirmation: FC<Props> = ({ request, onConfirm, onR
         </Box>
 
         <ModalSection
-          title={translate('plugins.walletConnectToDapps.modal.sendTransaction.estGasCost')}
+          title={
+            <HStack justify='space-between'>
+              <Text translation='plugins.walletConnectToDapps.modal.sendTransaction.estGasCost' />
+              <GasFeeEstimateLabel request={request} />
+            </HStack>
+          }
           icon={<FaGasPump />}
           defaultOpen={false}
         >

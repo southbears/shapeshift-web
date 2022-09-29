@@ -5,7 +5,7 @@ import { useCallback, useState } from 'react'
 import { RawText } from 'components/Text'
 
 type Props = {
-  title: string
+  title: ReactNode
   icon?: ReactElement
   defaultOpen?: boolean
   children: ReactNode
