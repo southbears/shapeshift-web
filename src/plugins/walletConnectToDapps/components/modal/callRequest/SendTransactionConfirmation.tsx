@@ -1,8 +1,6 @@
 import { Box, Button, HStack, Image, useColorModeValue, VStack } from '@chakra-ui/react'
-import type {
-  WalletConnectCallRequestResponseMap,
-  WalletConnectEthSendTransactionCallRequest,
-} from '@shapeshiftoss/hdwallet-walletconnect-bridge/dist/types'
+import { FeeDataKey } from '@shapeshiftoss/chain-adapters'
+import type { WalletConnectEthSendTransactionCallRequest } from '@shapeshiftoss/hdwallet-walletconnect-bridge/dist/types'
 import { useWalletConnect } from 'plugins/walletConnectToDapps/WalletConnectBridgeContext'
 import type { FC } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -15,11 +13,16 @@ import { Text } from 'components/Text'
 import { AddressSummaryCard } from './AddressSummaryCard'
 import { ContractInteractionBreakdown } from './ContractInteractionBreakdown'
 import { GasFeeEstimateLabel } from './GasFeeEstimateLabel'
+import { GasInput } from './GasInput'
 import { ModalSection } from './ModalSection'
 import { TransactionAdvancedParameters } from './TransactionAdvancedParameters'
 
 type CallRequest = WalletConnectEthSendTransactionCallRequest
-export type ConfirmData = Partial<WalletConnectCallRequestResponseMap[CallRequest['method']]>
+export type ConfirmData = {
+  nonce?: string
+  gasLimit?: string
+  speed: FeeDataKey
+}
 
 type Props = {
   request: CallRequest['params'][number]
@@ -35,16 +38,14 @@ export const SendTransactionConfirmation: FC<Props> = ({ request, onConfirm, onR
     defaultValues: {
       nonce: request.nonce,
       gasLimit: request.gasLimit,
+      speed: FeeDataKey.Average,
     },
   })
-
-  // const { fees } = useSendFees()
 
   const walletConnect = useWalletConnect()
   if (!walletConnect.bridge || !walletConnect.dapp) return null
   const address = walletConnect.bridge?.connector.accounts[0]
 
-  // const [gasInputValue, setGasInputValue] = useState<FeeDataKey>()
   return (
     <FormProvider {...form}>
       <VStack p={6} spacing={6} alignItems='stretch'>
@@ -101,7 +102,9 @@ export const SendTransactionConfirmation: FC<Props> = ({ request, onConfirm, onR
           icon={<FaGasPump />}
           defaultOpen={false}
         >
-          {/* <TxFeeRadioGroup fees={fees} /> */}
+          <Box pt={2}>
+            <GasInput request={request} />
+          </Box>
         </ModalSection>
 
         <ModalSection

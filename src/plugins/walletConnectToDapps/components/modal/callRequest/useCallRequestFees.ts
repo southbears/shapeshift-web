@@ -1,17 +1,19 @@
-import type { EvmBaseAdapter, EvmChainId, FeeDataEstimate } from '@shapeshiftoss/chain-adapters'
+import type { EvmBaseAdapter, EvmChainId } from '@shapeshiftoss/chain-adapters'
 import { FeeDataKey } from '@shapeshiftoss/chain-adapters'
 import type { WalletConnectEthSendTransactionCallRequest } from '@shapeshiftoss/hdwallet-walletconnect-bridge/dist/types'
 import { useWalletConnect } from 'plugins/walletConnectToDapps/WalletConnectBridgeContext'
 import { useCallback, useEffect, useState } from 'react'
+import type { FeePrice } from 'components/Modals/Send/views/Confirm'
 import { getChainAdapterManager } from 'context/PluginProvider/chainAdapterSingleton'
+import { bn, bnOrZero } from 'lib/bignumber/bignumber'
 
 export function useCallRequestFees(
   request: WalletConnectEthSendTransactionCallRequest['params'][number],
 ) {
-  const [fees, setFees] = useState<FeeDataEstimate<EvmChainId> | undefined>({
-    [FeeDataKey.Slow]: { txFee: '218975', chainSpecific: null as any },
-    [FeeDataKey.Average]: { txFee: '218975', chainSpecific: null as any },
-    [FeeDataKey.Fast]: { txFee: '218975', chainSpecific: null as any },
+  const [fees, setFees] = useState<FeePrice>({
+    [FeeDataKey.Slow]: { txFee: '0.0001', fiatFee: '5.00' },
+    [FeeDataKey.Average]: { txFee: '0.0001', fiatFee: '5.00' },
+    [FeeDataKey.Fast]: { txFee: '0.0001', fiatFee: '5.00' },
   })
 
   const walletConnect = useWalletConnect()
@@ -34,7 +36,7 @@ export function useCallRequestFees(
 
     // ETH
 
-    return (adapter as unknown as EvmBaseAdapter<EvmChainId>).getFeeData({
+    const estimatedFees = await (adapter as unknown as EvmBaseAdapter<EvmChainId>).getFeeData({
       to: request.to,
       value: request.value, // bnOrZero(request.value).toFixed(0),
       chainSpecific: {
@@ -43,6 +45,36 @@ export function useCallRequestFees(
         contractData: request.data,
       },
     })
+
+    // const price = bnOrZero(
+    //   useAppSelector(state => selectMarketDataById(state, feeAsset.assetId)).price,
+    // )
+
+    const initialFees: FeePrice = {
+      slow: {
+        fiatFee: '',
+        txFee: '',
+      },
+      average: {
+        fiatFee: '',
+        txFee: '',
+      },
+      fast: {
+        fiatFee: '',
+        txFee: '',
+      },
+    }
+    return (Object.keys(estimatedFees) as FeeDataKey[]).reduce<FeePrice>(
+      (acc: FeePrice, key: FeeDataKey) => {
+        const txFee = bnOrZero(estimatedFees[key].txFee)
+          .dividedBy(bn(`1e+${18 /* TODO: asset.precision */}`))
+          .toPrecision()
+        const fiatFee = bnOrZero(txFee).times(1200 /* TODO: price */).toPrecision()
+        acc[key] = { txFee, fiatFee }
+        return acc
+      },
+      initialFees,
+    )
   }, [address, request, connectedChainId])
 
   useEffect(() => {
